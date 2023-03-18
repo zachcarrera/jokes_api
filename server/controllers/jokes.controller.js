@@ -1,47 +1,46 @@
-const Joke = require("../models/jokes.model");
-const mongoose = require("mongoose");
+const { Joke } = require("../models/jokes.model");
 
-module.exports.findAllJokes = (req, res) => {
+const findAllJokes = (req, res) => {
     Joke.find()
         .then((allJokes) => {
             res.json({ jokes: allJokes });
         })
-        .catch((err) => {
-            res.json({ message: "Something went wrong", error: err });
+        .catch((error) => {
+            res.status(400).json({ ...error, message: error.message });
         });
 };
 
-module.exports.findOneJoke = (req, res) => {
+const findOneJoke = (req, res) => {
     Joke.findOne({ _id: req.params._id })
         .then((oneJoke) => {
             res.json({ joke: oneJoke });
         })
-        .catch((err) => {
-            res.json({ message: "Something went wrong", error: err });
+        .catch((error) => {
+            res.status(400).json({ ...error, message: error.message });
         });
 };
 
-module.exports.randomJoke = (req, res) => {
+const randomJoke = (req, res) => {
     Joke.find()
         .then((allJokes) => {
             res.json(allJokes[Math.floor(Math.random() * allJokes.length)]);
         })
-        .catch((err) => {
-            res.json({ message: "Something went wrong", error: err });
+        .catch((error) => {
+            res.status(400).json({ ...error, message: error.message });
         });
 };
 
-module.exports.createJoke = (req, res) => {
+const createJoke = (req, res) => {
     Joke.create(req.body)
         .then((newlyCreatedJoke) => {
             res.json({ joke: newlyCreatedJoke });
         })
-        .catch((err) => {
-            res.json({ message: "Something went wrong", error: err });
+        .catch((error) => {
+            res.status(400).json({ ...error, message: error.message });
         });
 };
 
-module.exports.updateExistingJoke = (req, res) => {
+const updateExistingJoke = (req, res) => {
     Joke.findOneAndUpdate({ _id: req.params._id }, req.body, {
         new: true,
         runValidators: true,
@@ -49,17 +48,26 @@ module.exports.updateExistingJoke = (req, res) => {
         .then((updatedJoke) => {
             res.json({ joke: updatedJoke });
         })
-        .catch((err) => {
-            res.json({ message: "Something went wrong", error: err });
+        .catch((error) => {
+            res.status(400).json({ ...error, message: error.message });
         });
 };
 
-module.exports.deleteJoke = (req, res) => {
+const deleteJoke = (req, res) => {
     Joke.deleteOne({ _id: req.params._id })
         .then((result) => {
             res.json({ result: result });
         })
-        .catch((err) => {
-            res.json({ message: "Something went wrong", error: err });
+        .catch((error) => {
+            res.status(400).json({ ...error, message: error.message });
         });
+};
+
+module.exports = {
+    findAllJokes,
+    findOneJoke,
+    randomJoke,
+    createJoke,
+    updateExistingJoke,
+    deleteJoke,
 };
