@@ -1,8 +1,9 @@
-const { Joke } = require("../models/jokes.model");
+import { Request, Response } from "express";
+import { Joke, IJoke } from "../models/jokes.model";
 
-const findAllJokes = (req, res) => {
+export const findAllJokes = (req: Request, res: Response) => {
     Joke.find()
-        .then((allJokes) => {
+        .then((allJokes: IJoke[]) => {
             res.json({ jokes: allJokes });
         })
         .catch((error) => {
@@ -10,9 +11,9 @@ const findAllJokes = (req, res) => {
         });
 };
 
-const findOneJoke = (req, res) => {
+export const findOneJoke = (req: Request, res: Response) => {
     Joke.findOne({ _id: req.params._id })
-        .then((oneJoke) => {
+        .then((oneJoke: IJoke | null) => {
             res.json({ joke: oneJoke });
         })
         .catch((error) => {
@@ -20,9 +21,9 @@ const findOneJoke = (req, res) => {
         });
 };
 
-const randomJoke = (req, res) => {
+export const randomJoke = (req: Request, res: Response) => {
     Joke.find()
-        .then((allJokes) => {
+        .then((allJokes: IJoke[]) => {
             res.json(allJokes[Math.floor(Math.random() * allJokes.length)]);
         })
         .catch((error) => {
@@ -30,9 +31,9 @@ const randomJoke = (req, res) => {
         });
 };
 
-const createJoke = (req, res) => {
+export const createJoke = (req: Request, res: Response) => {
     Joke.create(req.body)
-        .then((newlyCreatedJoke) => {
+        .then((newlyCreatedJoke: IJoke) => {
             res.json({ joke: newlyCreatedJoke });
         })
         .catch((error) => {
@@ -40,12 +41,12 @@ const createJoke = (req, res) => {
         });
 };
 
-const updateExistingJoke = (req, res) => {
+export const updateExistingJoke = (req: Request, res: Response) => {
     Joke.findOneAndUpdate({ _id: req.params._id }, req.body, {
         new: true,
         runValidators: true,
     })
-        .then((updatedJoke) => {
+        .then((updatedJoke: IJoke | null) => {
             res.json({ joke: updatedJoke });
         })
         .catch((error) => {
@@ -53,7 +54,7 @@ const updateExistingJoke = (req, res) => {
         });
 };
 
-const deleteJoke = (req, res) => {
+export const deleteJoke = (req: Request, res: Response) => {
     Joke.deleteOne({ _id: req.params._id })
         .then((result) => {
             res.json({ result: result });
@@ -61,13 +62,4 @@ const deleteJoke = (req, res) => {
         .catch((error) => {
             res.status(400).json({ ...error, message: error.message });
         });
-};
-
-module.exports = {
-    findAllJokes,
-    findOneJoke,
-    randomJoke,
-    createJoke,
-    updateExistingJoke,
-    deleteJoke,
 };
