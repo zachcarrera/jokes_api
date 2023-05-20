@@ -1,6 +1,11 @@
-const mongoose = require("mongoose");
+import mongoose, { Document, Schema } from "mongoose";
 
-const JokeSchema = new mongoose.Schema(
+export interface IJoke extends Document {
+    setup: string;
+    punchline: string;
+}
+
+const JokeSchema = new Schema(
     {
         setup: {
             type: String,
@@ -16,6 +21,4 @@ const JokeSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-const Joke = mongoose.model("Joke", JokeSchema);
-
-module.exports = { Joke };
+export const Joke = mongoose.model<IJoke>("Joke", JokeSchema);
